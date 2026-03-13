@@ -54,7 +54,8 @@ export default function FinalVerdict({ verdict, onReset }) {
   const overallColor = getScoreColor(overallScore);
   const sentence = verdict.sentence || verdict.summary || '';
   const survival = verdict.survivalProbability ?? verdict.survival ?? null;
-  const fixes = verdict.fixes || verdict.topFixes || [];
+  const verdictFixes = verdict.fixes || verdict.topFixes || [];
+  const fixes = Array.isArray(verdictFixes) ? verdictFixes : [];
 
   return (
     <motion.div

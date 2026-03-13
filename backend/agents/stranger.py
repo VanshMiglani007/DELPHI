@@ -127,5 +127,5 @@ async def run_stranger(url, websocket):
         err_str = traceback.format_exc()
         await send_message(websocket, "finding", f"Error during UI traversal: {err_str}", "CRITICAL", "error", 0)
         
-    await send_message(websocket, "judgment", "UX analysis complete.", "INFO", "status", 0)
+    await send_message(websocket, "status", "UX analysis complete.", "INFO", "status", 0)
     return {"status": "done"}

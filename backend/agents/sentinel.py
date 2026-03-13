@@ -73,6 +73,7 @@ async def run_sentinel(url, websocket):
             })
         
         await send_message(websocket, "finding", f"Discovered {len(discovered_endpoints)} internal endpoints and {len(discovered_forms)} forms", "LOW", "crawling", len(discovered_endpoints))
+        await send_message(websocket, "metric", "Endpoints discovered", "INFO", "endpoints", len(discovered_endpoints))
         prompt = sentinel_crawl_reasoning(endpoints_found=len(discovered_endpoints), forms_found=len(discovered_forms))
         await stream_reasoning(prompt, websocket, "sentinel")
     except Exception as e:
@@ -126,6 +127,7 @@ async def run_sentinel(url, websocket):
             
             if error_rate > 0.2:
                 breaking_point = users
+                await send_message(websocket, "metric", f"System collapsed at {users} users", "CRITICAL", "breakingPoint", users)
                 prompt = sentinel_load_reasoning(breaking_point, error_rate * 100)
                 await stream_reasoning(prompt, websocket, "sentinel")
                 await send_message(websocket, "finding", f"Collapses at {users} concurrent users (Error rate: {error_rate*100:.1f}%)", "CRITICAL", "load", users)
@@ -211,5 +213,5 @@ async def run_sentinel(url, websocket):
     else:
         await send_message(websocket, "finding", "Target is not using HTTPS (No SSL)", "HIGH", "ssl", 0)
 
-    await send_message(websocket, "judgment", "Technical analysis complete.", "INFO", "status", 0)
+    await send_message(websocket, "status", "Technical analysis complete.", "INFO", "status", 0)
     return {"status": "done"}

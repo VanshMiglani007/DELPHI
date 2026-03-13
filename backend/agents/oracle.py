@@ -140,5 +140,5 @@ async def run_oracle(url, websocket):
         traceback.print_exc()
         await send_message(websocket, "finding", f"Failed to analyze text: {repr(e)}", "CRITICAL", "error", 0)
 
-    await send_message(websocket, "judgment", "Business analysis complete.", "INFO", "status", 0)
+    await send_message(websocket, "status", "Business analysis complete.", "INFO", "status", 0)
     return {"status": "done"}

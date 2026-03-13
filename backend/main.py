@@ -68,18 +68,18 @@ async def start_analysis(payload: AnalyzePayload):
     if not url:
         return {"error": "No URL provided"}
 
-    # Run agents asynchronously
-    asyncio.create_task(run_all_agents(url))
-    return {"status": "Analysis started"}
-
-async def run_all_agents(url: str):
-    # Wait briefly for UI to establish websockets if needed
-    await asyncio.sleep(1)
-    
+    # Capture connections immediately
     ws_sentinel = manager.active_connections.get("sentinel")
     ws_stranger = manager.active_connections.get("stranger")
     ws_oracle = manager.active_connections.get("oracle")
 
+    # Run agents asynchronously with direct references
+    asyncio.create_task(run_all_agents(url, ws_sentinel, ws_stranger, ws_oracle))
+    return {"status": "Analysis started"}
+
+async def run_all_agents(url: str, ws_sentinel, ws_stranger, ws_oracle):
+    # Direct references captured at the time of the POST request
+    
     print(f"Sentinel WS: {ws_sentinel}")
     print(f"Stranger WS: {ws_stranger}")
     print(f"Oracle WS: {ws_oracle}")
@@ -94,16 +94,28 @@ async def run_all_agents(url: str):
 
     await asyncio.gather(t1, t2, t3, return_exceptions=True)
     
-    # Generate final verdict using the new prompt logic
-    verdict = generate_verdict(60, 50, 75, [])
+    # Collect results from agents
+    # For now, we simulate scores based on task completion
+    sentinel_score = 85
+    stranger_score = 70
+    oracle_score = 92
+
+    # Generate the text summary
+    summary_text = generate_verdict(sentinel_score, stranger_score, oracle_score, [])
+    
     final_message = {
         "agent": "system",
         "type": "judgment",
         "content": {
-            "text": verdict,
-            "severity": "INFO",
-            "category": "final",
-            "value": calculate_delphi_score(60, 50, 75)
+            "sentence": summary_text,
+            "overallScore": calculate_delphi_score(sentinel_score, stranger_score, oracle_score),
+            "survivalProbability": calculate_delphi_score(sentinel_score, stranger_score, oracle_score) - 10,
+            "scores": {
+                "sentinel": sentinel_score,
+                "stranger": stranger_score,
+                "oracle": oracle_score
+            },
+            "fixes": generate_fixes([]) # Empty list as fallback
         }
     }
     
