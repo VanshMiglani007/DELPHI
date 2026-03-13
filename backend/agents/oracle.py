@@ -3,6 +3,8 @@ import re
 from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
+from core.prompts import oracle_business_reasoning
+from core.ollama_client import stream_reasoning
 
 async def send_message(websocket, msg_type, text, severity="INFO", category="general", value=0):
     if websocket:
@@ -47,12 +49,9 @@ async def run_oracle(url, websocket):
         }''')
         
         full_text_lower = page_info['full_text'].lower()
-        
-        # 2. Value proposition analysis (mock LLaMA3 + real buzzword scan)
-        await send_message(websocket, "reasoning", "Checking value proposition clarity and scanning for vague buzzwords...", "INFO", "value_prop")
-        
-        # MOCK LLaMA3 vision/analysis placeholder request (returns hardcoded)
-        await send_message(websocket, "finding", "VALUE PROPOSITION UNCLEAR: Fails to clearly answer 'what is this, who is it for, why does it matter'", "HIGH", "value_prop", 0)
+        # 2. Value proposition analysis
+        prompt = oracle_business_reasoning(page_info['full_text'])
+        await stream_reasoning(prompt, websocket, "oracle")
         
         buzzwords = ['revolutionary', 'seamless', 'innovative', 'next-gen', 'paradigm shift', 'synergy']
         found_buzzwords = [bw for bw in buzzwords if bw in full_text_lower]

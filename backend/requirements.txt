@@ -4,3 +4,4 @@ websockets
 playwright
 requests
 beautifulsoup4
+groq

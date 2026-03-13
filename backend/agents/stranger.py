@@ -1,5 +1,6 @@
 import asyncio
-from core.prompts import mock_llama3_vision
+from core.prompts import stranger_firstimpression_reasoning, stranger_ux_reasoning
+from core.ollama_client import stream_reasoning
 
 async def send_message(websocket, msg_type, text, severity="INFO", category="general", value=0):
     if websocket:
@@ -31,9 +32,10 @@ async def run_stranger(url, websocket):
         screenshot_path = f"target_screenshot.png"
         await page.screenshot(path=screenshot_path, full_page=True)
         
-        vision_result = await mock_llama3_vision(screenshot_path)
-        if vision_result["value_proposition_unclear"]:
-             await send_message(websocket, "finding", "VALUE PROPOSITION UNCLEAR - Takes too long to communicate product purpose", "HIGH", "first_impression", 0)
+        #vision_result = await mock_llama3_vision(screenshot_path)
+        # Use simple presence check or text to simulate vision clarity analysis
+        prompt = stranger_firstimpression_reasoning("Product landing page with clear CTA")
+        await stream_reasoning(prompt, websocket, "stranger")
 
         # 2. CTA Discovery
         await send_message(websocket, "reasoning", "Looking for primary CTA above the fold...", "INFO", "cta")
@@ -178,6 +180,8 @@ async def run_stranger(url, websocket):
 
         if mobile_issues:
             for issue in mobile_issues:
+                prompt = stranger_ux_reasoning(issue)
+                await stream_reasoning(prompt, websocket, "stranger")
                 await send_message(websocket, "finding", f"Mobile issue: {issue}", "HIGH", "mobile", 0)
         else:
             await send_message(websocket, "finding", "Mobile layout is stable, text is readable, and buttons are tappable sizes", "LOW", "mobile", 1)

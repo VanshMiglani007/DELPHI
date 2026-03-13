@@ -1,0 +1,376 @@
+﻿--- Starting parallel agent testing on http://example.com ---
+[TEST CLIENT] Connected to SENTINEL stream
+[TEST CLIENT] Connected to STRANGER stream
+[TEST CLIENT] Connected to ORACLE stream
+[TEST CLIENT] Triggered analysis via API for http://example.com
+[SENTINEL] [REASONING] [INFO]: Starting Sentinel analysis for http://example.com
+[STRANGER] [REASONING] [INFO]: Loading page as a first-time user...
+[ORACLE] [REASONING] [INFO]: Loading page to extract full text and evaluate business positioning...
+[STRANGER] [REASONING] [INFO]: Taking full page screenshot for vision analysis...
+[SENTINEL] [FINDING] [LOW]: Discovered 1 internal endpoints and 0 forms
+[STRANGER] [REASONING] [LOW]: Honestly, 
+[STRANGER] [REASONING] [LOW]: no, 
+[ORACLE] [REASONING] [LOW]: The 
+[STRANGER] [REASONING] [LOW]: I 
+[ORACLE] [REASONING] [LOW]: value 
+[STRANGER] [REASONING] [LOW]: have 
+[ORACLE] [REASONING] [LOW]: proposition 
+[STRANGER] [REASONING] [LOW]: no 
+[ORACLE] [REASONING] [LOW]: of 
+[STRANGER] [REASONING] [LOW]: idea 
+[ORACLE] [REASONING] [LOW]: this 
+[STRANGER] [REASONING] [LOW]: what 
+[SENTINEL] [REASONING] [LOW]: The 
+[ORACLE] [REASONING] [LOW]: domain 
+[STRANGER] [REASONING] [LOW]: this 
+[SENTINEL] [REASONING] [LOW]: exposed 
+[ORACLE] [REASONING] [LOW]: is 
+[STRANGER] [REASONING] [LOW]: product 
+[SENTINEL] [REASONING] [LOW]: endpoint 
+[ORACLE] [REASONING] [LOW]: non-existent 
+[STRANGER] [REASONING] [LOW]: does 
+[SENTINEL] [REASONING] [LOW]: presents 
+[ORACLE] [REASONING] [LOW]: as 
+[STRANGER] [REASONING] [LOW]: - 
+[SENTINEL] [REASONING] [LOW]: an 
+[ORACLE] [REASONING] [LOW]: it 
+[STRANGER] [REASONING] [LOW]: it 
+[SENTINEL] [REASONING] [LOW]: opportunity 
+[ORACLE] [REASONING] [LOW]: serves 
+[STRANGER] [REASONING] [LOW]: sounds 
+[SENTINEL] [REASONING] [LOW]: for 
+[ORACLE] [REASONING] [LOW]: no 
+[STRANGER] [REASONING] [LOW]: like 
+[SENTINEL] [REASONING] [LOW]: exploitation, 
+[ORACLE] [REASONING] [LOW]: purpose 
+[STRANGER] [REASONING] [LOW]: some 
+[SENTINEL] [REASONING] [LOW]: its 
+[ORACLE] [REASONING] [LOW]: other 
+[STRANGER] [REASONING] [LOW]: technical 
+[SENTINEL] [REASONING] [LOW]: lack 
+[ORACLE] [REASONING] [LOW]: than 
+[STRANGER] [REASONING] [LOW]: jargon 
+[SENTINEL] [REASONING] [LOW]: of 
+[ORACLE] [REASONING] [LOW]: to 
+[STRANGER] [REASONING] [LOW]: that's 
+[SENTINEL] [REASONING] [LOW]: input 
+[ORACLE] [REASONING] [LOW]: test 
+[STRANGER] [REASONING] [LOW]: more 
+[SENTINEL] [REASONING] [LOW]: forms 
+[ORACLE] [REASONING] [LOW]: technical 
+[STRANGER] [REASONING] [LOW]: about 
+[SENTINEL] [REASONING] [LOW]: and 
+[ORACLE] [REASONING] [LOW]: documentation, 
+[STRANGER] [REASONING] [LOW]: design 
+[SENTINEL] [REASONING] [LOW]: associated 
+[ORACLE] [REASONING] [LOW]: rendering 
+[STRANGER] [REASONING] [LOW]: than 
+[SENTINEL] [REASONING] [LOW]: validation 
+[ORACLE] [REASONING] [LOW]: it 
+[STRANGER] [REASONING] [LOW]: actually 
+[SENTINEL] [REASONING] [LOW]: mechanisms 
+[ORACLE] [REASONING] [LOW]: unappealing 
+[STRANGER] [REASONING] [LOW]: telling 
+[SENTINEL] [REASONING] [LOW]: suggesting 
+[ORACLE] [REASONING] [LOW]: as 
+[STRANGER] [REASONING] [LOW]: me 
+[SENTINEL] [REASONING] [LOW]: a 
+[ORACLE] [REASONING] [LOW]: a 
+[STRANGER] [REASONING] [LOW]: what 
+[SENTINEL] [REASONING] [LOW]: minimal 
+[ORACLE] [REASONING] [LOW]: potential 
+[STRANGER] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: but 
+[ORACLE] [REASONING] [LOW]: investment. 
+[STRANGER] [REASONING] [LOW]: product 
+[SENTINEL] [REASONING] [LOW]: still 
+[ORACLE] [REASONING] [LOW]: There 
+[STRANGER] [REASONING] [LOW]: is. 
+[SENTINEL] [REASONING] [LOW]: present 
+[ORACLE] [REASONING] [LOW]: is 
+[STRANGER] [REASONING] [LOW]: Can't 
+[SENTINEL] [REASONING] [LOW]: threat 
+[ORACLE] [REASONING] [LOW]: no 
+[STRANGER] [REASONING] [LOW]: they 
+[SENTINEL] [REASONING] [LOW]: surface 
+[ORACLE] [REASONING] [LOW]: evidence 
+[STRANGER] [REASONING] [LOW]: just 
+[SENTINEL] [REASONING] [LOW]: ripe 
+[ORACLE] [REASONING] [LOW]: of 
+[STRANGER] [REASONING] [LOW]: say 
+[SENTINEL] [REASONING] [LOW]: for 
+[ORACLE] [REASONING] [LOW]: traction 
+[STRANGER] [REASONING] [LOW]: something 
+[SENTINEL] [REASONING] [LOW]: exploitation. 
+[ORACLE] [REASONING] [LOW]: or 
+[STRANGER] [REASONING] [LOW]: simple 
+[SENTINEL] [REASONING] [LOW]: A 
+[ORACLE] [REASONING] [LOW]: scalability 
+[STRANGER] [REASONING] [LOW]: like 
+[SENTINEL] [REASONING] [LOW]: carefully 
+[ORACLE] [REASONING] [LOW]: as 
+[STRANGER] [REASONING] [LOW]: "a 
+[SENTINEL] [REASONING] [LOW]: crafted 
+[ORACLE] [REASONING] [LOW]: it's 
+[STRANGER] [REASONING] [LOW]: website 
+[SENTINEL] [REASONING] [LOW]: request 
+[ORACLE] [REASONING] [LOW]: explicitly 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: could 
+[ORACLE] [REASONING] [LOW]: stated 
+[STRANGER] [REASONING] [LOW]: buy 
+[SENTINEL] [REASONING] [LOW]: potentially 
+[ORACLE] [REASONING] [LOW]: for 
+[STRANGER] [REASONING] [LOW]: stuff" 
+[SENTINEL] [REASONING] [LOW]: bypass 
+[ORACLE] [REASONING] [LOW]: use 
+[STRANGER] [REASONING] [LOW]: or 
+[SENTINEL] [REASONING] [LOW]: or 
+[ORACLE] [REASONING] [LOW]: in 
+[STRANGER] [REASONING] [LOW]: "a 
+[SENTINEL] [REASONING] [LOW]: overwhelm 
+[ORACLE] [REASONING] [LOW]: documentation 
+[STRANGER] [REASONING] [LOW]: tool 
+[SENTINEL] [REASONING] [LOW]: the 
+[ORACLE] [REASONING] [LOW]: examples, 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: existing 
+[ORACLE] [REASONING] [LOW]: with 
+[STRANGER] [REASONING] [LOW]: solve 
+[SENTINEL] [REASONING] [LOW]: security 
+[ORACLE] [REASONING] [LOW]: no 
+[STRANGER] [REASONING] [LOW]: a 
+[SENTINEL] [REASONING] [LOW]: controls, 
+[ORACLE] [REASONING] [LOW]: clear 
+[STRANGER] [REASONING] [LOW]: problem" 
+[SENTINEL] [REASONING] [LOW]: affording 
+[ORACLE] [REASONING] [LOW]: customer 
+[STRANGER] [REASONING] [LOW]: instead 
+[SENTINEL] [REASONING] [LOW]: us 
+[ORACLE] [REASONING] [LOW]: acquisition 
+[STRANGER] [REASONING] [LOW]: of 
+[SENTINEL] [REASONING] [LOW]: a 
+[ORACLE] [REASONING] [LOW]: or 
+[STRANGER] [REASONING] [LOW]: using 
+[SENTINEL] [REASONING] [LOW]: vantage 
+[ORACLE] [REASONING] [LOW]: retention 
+[STRANGER] [REASONING] [LOW]: all 
+[SENTINEL] [REASONING] [LOW]: point 
+[ORACLE] [REASONING] [LOW]: strategy 
+[STRANGER] [REASONING] [LOW]: these 
+[SENTINEL] [REASONING] [LOW]: to 
+[ORACLE] [REASONING] [LOW]: in 
+[STRANGER] [REASONING] [LOW]: fancy 
+[SENTINEL] [REASONING] [LOW]: begin 
+[ORACLE] [REASONING] [LOW]: place. 
+[STRANGER] [REASONING] [LOW]: terms? 
+[SENTINEL] [REASONING] [LOW]: probing 
+[ORACLE] [REASONING] [LOW]: The 
+[STRANGER] [REASONING] [INFO]: Looking for primary CTA above the fold...
+[STRANGER] [FINDING] [CRITICAL]: CTA NOT VISIBLE above the fold ù Users will leave before interacting
+[STRANGER] [REASONING] [INFO]: Attempting to navigate to signup/onboarding flow...
+[STRANGER] [FINDING] [HIGH]: Failed to identify or click a clear signup CTA
+[STRANGER] [REASONING] [INFO]: Scanning DOM for trust signals (Testimonials, Pricing, Privacy, Contact, Security)...
+[STRANGER] [FINDING] [MEDIUM]: Missing trust signal: Testimonials
+[STRANGER] [FINDING] [MEDIUM]: Missing trust signal: Pricing
+[STRANGER] [FINDING] [MEDIUM]: Missing trust signal: Privacy
+[STRANGER] [FINDING] [MEDIUM]: Missing trust signal: Contact
+[STRANGER] [FINDING] [MEDIUM]: Missing trust signal: Security
+[STRANGER] [REASONING] [INFO]: Switching to mobile viewport (375x812) to verify layout and tappable areas...
+[SENTINEL] [REASONING] [LOW]: for 
+[ORACLE] [REASONING] [LOW]: single 
+[SENTINEL] [REASONING] [LOW]: vulnerabilities. 
+[ORACLE] [REASONING] [LOW]: biggest 
+[ORACLE] [REASONING] [LOW]: business 
+[ORACLE] [REASONING] [LOW]: risk 
+[SENTINEL] [FINDING] [HIGH]: Missing X-Frame-Options: Vulnerable to clickjacking
+[SENTINEL] [FINDING] [HIGH]: Missing Content-Security-Policy: No CSP: vulnerable to XSS attacks
+[SENTINEL] [FINDING] [HIGH]: Missing Strict-Transport-Security: Missing HSTS: vulnerable to downgrade attacks
+[SENTINEL] [FINDING] [HIGH]: Missing X-Content-Type-Options: Missing MIME sniffing protection
+[SENTINEL] [FINDING] [HIGH]: Missing X-XSS-Protection: Browser XSS filter disabled
+[SENTINEL] [FINDING] [HIGH]: Missing Referrer-Policy: Potential referrer data leakage
+[ORACLE] [REASONING] [LOW]: I 
+[ORACLE] [REASONING] [LOW]: see 
+[ORACLE] [REASONING] [LOW]: is 
+[ORACLE] [REASONING] [LOW]: that 
+[ORACLE] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: The 
+[ORACLE] [REASONING] [LOW]: product 
+[SENTINEL] [REASONING] [LOW]: absence 
+[ORACLE] [REASONING] [LOW]: is 
+[SENTINEL] [REASONING] [LOW]: of 
+[ORACLE] [REASONING] [LOW]: essentially 
+[SENTINEL] [REASONING] [LOW]: these 
+[ORACLE] [REASONING] [LOW]: a 
+[SENTINEL] [REASONING] [LOW]: security 
+[ORACLE] [REASONING] [LOW]: free 
+[SENTINEL] [REASONING] [LOW]: headers 
+[ORACLE] [REASONING] [LOW]: resource, 
+[SENTINEL] [REASONING] [LOW]: leaves 
+[ORACLE] [REASONING] [LOW]: making 
+[SENTINEL] [REASONING] [LOW]: your 
+[ORACLE] [REASONING] [LOW]: it 
+[STRANGER] [REASONING] [LOW]: I 
+[SENTINEL] [REASONING] [LOW]: application 
+[ORACLE] [REASONING] [LOW]: extremely 
+[STRANGER] [REASONING] [LOW]: was 
+[SENTINEL] [REASONING] [LOW]: vulnerable 
+[ORACLE] [REASONING] [LOW]: challenging 
+[STRANGER] [REASONING] [LOW]: getting 
+[SENTINEL] [REASONING] [LOW]: to 
+[ORACLE] [REASONING] [LOW]: to 
+[STRANGER] [REASONING] [LOW]: frustrated 
+[SENTINEL] [REASONING] [LOW]: advanced 
+[ORACLE] [REASONING] [LOW]: generate 
+[STRANGER] [REASONING] [LOW]: because 
+[SENTINEL] [REASONING] [LOW]: web 
+[ORACLE] [REASONING] [LOW]: revenue 
+[STRANGER] [REASONING] [LOW]: I 
+[SENTINEL] [REASONING] [LOW]: attacks 
+[ORACLE] [REASONING] [LOW]: and 
+[STRANGER] [REASONING] [LOW]: couldn't 
+[SENTINEL] [REASONING] [LOW]: such 
+[ORACLE] [REASONING] [LOW]: sustain 
+[STRANGER] [REASONING] [LOW]: tap 
+[SENTINEL] [REASONING] [LOW]: as 
+[ORACLE] [REASONING] [LOW]: growth. 
+[STRANGER] [REASONING] [LOW]: on 
+[SENTINEL] [REASONING] [LOW]: clickjacking, 
+[ORACLE] [REASONING] [INFO]: Looking for pricing page (/pricing, /plans, /cost)...
+[ORACLE] [FINDING] [MEDIUM]: Pricing strategy obscured or not clearly stated from landing page (Missing /pricing or /plans)
+[ORACLE] [REASONING] [INFO]: Quantifying social proof and trust signals...
+[ORACLE] [FINDING] [MEDIUM]: Missing critical social proof element: testimonials
+[ORACLE] [FINDING] [MEDIUM]: Missing critical social proof element: user counts
+[ORACLE] [FINDING] [MEDIUM]: Missing critical social proof element: press mentions
+[ORACLE] [FINDING] [MEDIUM]: Missing critical social proof element: star ratings
+[ORACLE] [REASONING] [INFO]: Analyzing CTA copy for action orientation...
+[ORACLE] [FINDING] [MEDIUM]: Weak, unoptimized CTA language detected: learn more. Use action-oriented, value-driven CTAs.
+[ORACLE] [FINDING] [HIGH]: No strong ('Get Started', etc.) driver CTAs found.
+[ORACLE] [REASONING] [INFO]: Checking all extracted hrefs for broken links (4xx/5xx)...
+[STRANGER] [REASONING] [LOW]: these 
+[SENTINEL] [REASONING] [LOW]: code 
+[STRANGER] [REASONING] [LOW]: tiny 
+[SENTINEL] [REASONING] [LOW]: injection, 
+[STRANGER] [REASONING] [LOW]: interactive 
+[SENTINEL] [REASONING] [LOW]: cross-site 
+[STRANGER] [REASONING] [LOW]: elements, 
+[SENTINEL] [REASONING] [LOW]: scripting, 
+[STRANGER] [REASONING] [LOW]: and 
+[SENTINEL] [REASONING] [LOW]: and 
+[STRANGER] [REASONING] [LOW]: it 
+[SENTINEL] [REASONING] [LOW]: mixed-content 
+[STRANGER] [REASONING] [LOW]: made 
+[SENTINEL] [REASONING] [LOW]: vulnerabilities, 
+[STRANGER] [REASONING] [LOW]: me 
+[SENTINEL] [REASONING] [LOW]: allowing 
+[STRANGER] [REASONING] [LOW]: feel 
+[SENTINEL] [REASONING] [LOW]: attackers 
+[STRANGER] [REASONING] [LOW]: like 
+[SENTINEL] [REASONING] [LOW]: to 
+[STRANGER] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: embed 
+[STRANGER] [REASONING] [LOW]: website 
+[SENTINEL] [REASONING] [LOW]: malicious 
+[STRANGER] [REASONING] [LOW]: was 
+[SENTINEL] [REASONING] [LOW]: content 
+[STRANGER] [REASONING] [LOW]: trying 
+[SENTINEL] [REASONING] [LOW]: within 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: your 
+[STRANGER] [REASONING] [LOW]: hide 
+[SENTINEL] [REASONING] [LOW]: own 
+[STRANGER] [REASONING] [LOW]: stuff 
+[SENTINEL] [REASONING] [LOW]: site, 
+[STRANGER] [REASONING] [LOW]: from 
+[SENTINEL] [REASONING] [LOW]: inject 
+[STRANGER] [REASONING] [LOW]: me 
+[SENTINEL] [REASONING] [LOW]: arbitrary 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: code, 
+[STRANGER] [REASONING] [LOW]: see 
+[SENTINEL] [REASONING] [LOW]: or 
+[STRANGER] [REASONING] [LOW]: how 
+[SENTINEL] [REASONING] [LOW]: manipulate 
+[STRANGER] [REASONING] [LOW]: long 
+[SENTINEL] [REASONING] [LOW]: users 
+[STRANGER] [REASONING] [LOW]: it 
+[SENTINEL] [REASONING] [LOW]: into 
+[STRANGER] [REASONING] [LOW]: would 
+[SENTINEL] [REASONING] [LOW]: divulging 
+[STRANGER] [REASONING] [LOW]: take 
+[SENTINEL] [REASONING] [LOW]: sensitive 
+[STRANGER] [REASONING] [LOW]: me 
+[SENTINEL] [REASONING] [LOW]: information. 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: In 
+[STRANGER] [REASONING] [LOW]: notice. 
+[SENTINEL] [REASONING] [LOW]: the 
+[STRANGER] [REASONING] [LOW]: Eventually, 
+[SENTINEL] [REASONING] [LOW]: wild, 
+[STRANGER] [REASONING] [LOW]: I 
+[SENTINEL] [REASONING] [LOW]: I've 
+[STRANGER] [REASONING] [LOW]: just 
+[SENTINEL] [REASONING] [LOW]: personally 
+[STRANGER] [REASONING] [LOW]: clicked 
+[SENTINEL] [REASONING] [LOW]: witnessed 
+[STRANGER] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: attackers 
+[STRANGER] [REASONING] [LOW]: "dismiss" 
+[SENTINEL] [REASONING] [LOW]: exploit 
+[STRANGER] [REASONING] [LOW]: button 
+[SENTINEL] [REASONING] [LOW]: these 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: exact 
+[STRANGER] [REASONING] [LOW]: get 
+[SENTINEL] [REASONING] [LOW]: gaps 
+[STRANGER] [REASONING] [LOW]: rid 
+[SENTINEL] [REASONING] [LOW]: to 
+[STRANGER] [REASONING] [LOW]: of 
+[SENTINEL] [REASONING] [LOW]: steal 
+[STRANGER] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: session 
+[STRANGER] [REASONING] [LOW]: error 
+[SENTINEL] [REASONING] [LOW]: cookies, 
+[STRANGER] [REASONING] [LOW]: message 
+[SENTINEL] [REASONING] [LOW]: inject 
+[STRANGER] [REASONING] [LOW]: and 
+[SENTINEL] [REASONING] [LOW]: malware, 
+[STRANGER] [REASONING] [LOW]: kept 
+[SENTINEL] [REASONING] [LOW]: and 
+[STRANGER] [REASONING] [LOW]: trying 
+[SENTINEL] [REASONING] [LOW]: even 
+[STRANGER] [REASONING] [LOW]: to 
+[SENTINEL] [REASONING] [LOW]: bypass 
+[STRANGER] [REASONING] [LOW]: navigate 
+[SENTINEL] [REASONING] [LOW]: two-factor 
+[ORACLE] [REASONING] [INFO]: Running copy grammar and professionalism checks...
+[STRANGER] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: authentication, 
+[STRANGER] [REASONING] [LOW]: website 
+[SENTINEL] [REASONING] [LOW]: resulting 
+[ORACLE] [JUDGMENT] [INFO]: Business analysis complete.
+[STRANGER] [REASONING] [LOW]: in 
+[SENTINEL] [REASONING] [LOW]: in 
+[STRANGER] [REASONING] [LOW]: the 
+[SENTINEL] [REASONING] [LOW]: significant 
+[STRANGER] [REASONING] [LOW]: hopes 
+[SENTINEL] [REASONING] [LOW]: data 
+[STRANGER] [REASONING] [LOW]: that 
+[SENTINEL] [REASONING] [LOW]: breaches 
+[STRANGER] [REASONING] [LOW]: other 
+[SENTINEL] [REASONING] [LOW]: and 
+[STRANGER] [REASONING] [LOW]: parts 
+[SENTINEL] [REASONING] [LOW]: financial 
+[STRANGER] [REASONING] [LOW]: wouldn't 
+[SENTINEL] [REASONING] [LOW]: losses. 
+[STRANGER] [REASONING] [LOW]: be 
+[SENTINEL] [REASONING] [INFO]: Initiating progressive load test (10->500 users)...
+[SENTINEL] [METRIC] [INFO]: Testing at 10 concurrent users
+[STRANGER] [REASONING] [LOW]: as 
+[STRANGER] [REASONING] [LOW]: finicky. 
+[STRANGER] [FINDING] [HIGH]: Mobile issue: 1 interactive elements are smaller than 44x44px (hard to tap)
+[STRANGER] [JUDGMENT] [INFO]: UX analysis complete.
+[SENTINEL] [METRIC] [INFO]: Testing at 50 concurrent users
+[SENTINEL] [METRIC] [INFO]: Testing at 100 concurrent users
+[SENTINEL] [METRIC] [INFO]: Testing at 200 concurrent users
+--- Test Complete ---

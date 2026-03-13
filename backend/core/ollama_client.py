@@ -1,19 +1,22 @@
-import ollama
 import asyncio
+import os
 import json
+from groq import Groq
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 async def stream_reasoning(prompt: str, websocket, agent: str):
     loop = asyncio.get_event_loop()
 
-    def run_ollama():
-        return ollama.chat(
-            model="llama3",
+    def call_groq():
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            stream=False
+            max_tokens=200
         )
+        return response.choices[0].message.content
 
-    response = await loop.run_in_executor(None, run_ollama)
-    full_text = response['message']['content']
+    full_text = await loop.run_in_executor(None, call_groq)
 
     words = full_text.split()
     for word in words:

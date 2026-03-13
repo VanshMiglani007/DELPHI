@@ -1,0 +1,59 @@
+﻿--- Starting parallel agent testing on http://example.com ---
+[TEST CLIENT] Connected to SENTINEL stream
+[TEST CLIENT] Connected to STRANGER stream
+[TEST CLIENT] Connected to ORACLE stream
+[TEST CLIENT] Triggered analysis via API for http://example.com
+[SENTINEL] [REASONING] [INFO]: Starting Sentinel analysis for http://example.com
+[STRANGER] [REASONING] [INFO]: Loading page as a first-time user...
+[ORACLE] [REASONING] [INFO]: Loading page to extract full text and evaluate business positioning...
+[STRANGER] [REASONING] [INFO]: Taking full page screenshot for vision analysis...
+[ORACLE] [FINDING] [CRITICAL]: Failed to analyze text: BadRequestError("Error code: 400 - {'error': {'message': 'The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.', 'type': 'invalid_request_error', 'code': 'model_decommissioned'}}")
+[ORACLE] [JUDGMENT] [INFO]: Business analysis complete.
+[STRANGER] [FINDING] [CRITICAL]: Error during UI traversal: Traceback (most recent call last):
+  File "C:\Users\HP\DELPHI\backend\agents\stranger.py", line 38, in run_stranger
+    await stream_reasoning(prompt, websocket, "stranger")
+  File "C:\Users\HP\DELPHI\backend\core\ollama_client.py", line 18, in stream_reasoning
+    full_text = await loop.run_in_executor(None, call_groq)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "C:\Users\HP\DELPHI\backend\core\ollama_client.py", line 11, in call_groq
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=200
+    )
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages\groq\resources\chat\completions.py", line 461, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/openai/v1/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<45 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages\groq\_base_client.py", line 1280, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python313\Lib\site-packages\groq\_base_client.py", line 1067, in request
+    raise self._make_status_error_from_response(err.response) from None
+groq.BadRequestError: Error code: 400 - {'error': {'message': 'The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.', 'type': 'invalid_request_error', 'code': 'model_decommissioned'}}
+
+[STRANGER] [JUDGMENT] [INFO]: UX analysis complete.
+[SENTINEL] [FINDING] [LOW]: Discovered 1 internal endpoints and 0 forms
+[SENTINEL] [FINDING] [CRITICAL]: Failed to crawl: Error code: 400 - {'error': {'message': 'The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.', 'type': 'invalid_request_error', 'code': 'model_decommissioned'}}
+[SENTINEL] [FINDING] [HIGH]: Missing X-Frame-Options: Vulnerable to clickjacking
+[SENTINEL] [FINDING] [HIGH]: Missing Content-Security-Policy: No CSP: vulnerable to XSS attacks
+[SENTINEL] [FINDING] [HIGH]: Missing Strict-Transport-Security: Missing HSTS: vulnerable to downgrade attacks
+[SENTINEL] [FINDING] [HIGH]: Missing X-Content-Type-Options: Missing MIME sniffing protection
+[SENTINEL] [FINDING] [HIGH]: Missing X-XSS-Protection: Browser XSS filter disabled
+[SENTINEL] [FINDING] [HIGH]: Missing Referrer-Policy: Potential referrer data leakage
+[SENTINEL] [FINDING] [CRITICAL]: Failed to read headers: Error code: 400 - {'error': {'message': 'The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.', 'type': 'invalid_request_error', 'code': 'model_decommissioned'}}
+[SENTINEL] [REASONING] [INFO]: Initiating progressive load test (10->500 users)...
+[SENTINEL] [METRIC] [INFO]: Testing at 10 concurrent users
+[SENTINEL] [METRIC] [INFO]: Testing at 50 concurrent users
+[SENTINEL] [METRIC] [INFO]: Testing at 100 concurrent users
+[SENTINEL] [METRIC] [INFO]: Testing at 200 concurrent users
+[SENTINEL] [METRIC] [INFO]: Testing at 500 concurrent users
+--- Test Complete ---

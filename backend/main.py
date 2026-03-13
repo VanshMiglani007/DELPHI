@@ -1,5 +1,6 @@
 import sys
 import asyncio
+
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
@@ -9,7 +10,7 @@ from pydantic import BaseModel
 
 from core.crawler import DelphiCrawler
 from core.scorer import calculate_delphi_score
-from core.prompts import mock_llama3_verdict
+from core.prompts import generate_verdict, generate_fixes
 from agents.sentinel import run_sentinel
 from agents.stranger import run_stranger
 from agents.oracle import run_oracle
@@ -44,7 +45,6 @@ class ConnectionManager:
                 pass
 
 manager = ConnectionManager()
-crawler = DelphiCrawler()
 
 class AnalyzePayload(BaseModel):
     url: str
@@ -58,7 +58,7 @@ async def startup_event():
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    await crawler.stop()
+    pass
 
 @app.post("/api/analyze")
 async def start_analysis(payload: AnalyzePayload):
@@ -84,8 +84,8 @@ async def run_all_agents(url: str):
 
     await asyncio.gather(t1, t2, t3)
     
-    # Generate final verdict using mocked logic
-    verdict = await mock_llama3_verdict(60, 50, 75)
+    # Generate final verdict using the new prompt logic
+    verdict = generate_verdict(60, 50, 75, [])
     final_message = {
         "agent": "system",
         "type": "judgment",
