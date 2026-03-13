@@ -1,257 +1,154 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-// import { io } from 'socket.io-client';
-import { runTestSimulation } from '../testSocket';
 
-const AGENT_ENDPOINTS = {
+const WS_URLS = {
   sentinel: 'ws://localhost:8000/ws/sentinel',
   stranger: 'ws://localhost:8000/ws/stranger',
-  oracle: 'ws://localhost:8000/ws/oracle',
-};
+  oracle: 'ws://localhost:8000/ws/oracle'
+}
 
-const initialAgentData = () => ({
+const initialAgentState = {
   status: 'idle',
-  reasoning: [],
-  findings: [],
-});
-
-const initialMetrics = () => ({
-  endpoints: 0,
-  vulnerabilities: 0,
-  breakingPoint: null,
-  uxFailures: 0,
-  businessGaps: 0,
-});
+  reasoning: '',
+  findings: []
+}
 
 export default function useWebSocket() {
-  const [screen, setScreen] = useState('landing');
-  const [sentinelData, setSentinelData] = useState(initialAgentData());
-  const [strangerData, setStrangerData] = useState(initialAgentData());
-  const [oracleData, setOracleData] = useState(initialAgentData());
-  const [metrics, setMetrics] = useState(initialMetrics());
-  const [offlineStatus, setOfflineStatus] = useState(null); // 'connecting', 'connected', 'error', 'disconnected'
-  const [showOfflineToast, setShowOfflineToast] = useState(false);
-  const [backendConnectivity, setBackendConnectivity] = useState(null); // To track overall demo mode state
-  const [verdict, setVerdict] = useState(null);
-  const [targetUrl, setTargetUrl] = useState('');
-  const socketsRef = useRef({});
-  const testCleanupRef = useRef(null);
+  const [screen, setScreen] = useState('landing')
+  const [sentinelData, setSentinelData] = useState({...initialAgentState})
+  const [strangerData, setStrangerData] = useState({...initialAgentState})
+  const [oracleData, setOracleData] = useState({...initialAgentState})
+  const [metrics, setMetrics] = useState({
+    endpoints: 0,
+    vulnerabilities: 0,
+    breakingPoint: null,
+    uxFailures: 0,
+    businessGaps: 0
+  })
+  const [verdict, setVerdict] = useState(null)
+  const [connectionStatus, setConnectionStatus] = useState('disconnected')
 
-  const getAgentSetter = useCallback((agent) => {
-    switch (agent) {
-      case 'sentinel': return setSentinelData;
-      case 'stranger': return setStrangerData;
-      case 'oracle': return setOracleData;
-      default: return null;
-    }
-  }, []);
+  const wsRefs = useRef({})
 
-  const handleMessage = useCallback((data) => {
-    const { agent, type, content } = data;
-    const setter = getAgentSetter(agent);
-
-    if (type === 'reasoning' && setter) {
-      setter((prev) => ({
-        ...prev,
-        status: 'analyzing',
-        reasoning: [...prev.reasoning, content.text],
-      }));
+  const handleMessage = useCallback((agent, event) => {
+    let data
+    try {
+      data = JSON.parse(event.data)
+    } catch {
+      return
     }
 
-    if (type === 'finding' && setter) {
-      setter((prev) => ({
+    const { type, content } = data
+
+    const setAgentData = {
+      sentinel: setSentinelData,
+      stranger: setStrangerData,
+      oracle: setOracleData
+    }[agent]
+
+    if (!setAgentData) return
+
+    if (type === 'reasoning') {
+      setAgentData(prev => ({
         ...prev,
         status: 'analyzing',
-        findings: [...prev.findings, content],
-      }));
+        reasoning: prev.reasoning + ' ' + (content.text || '')
+      }))
+    }
 
-      setMetrics((prev) => {
-        const updated = { ...prev };
-        const cat = (content.category || '').toLowerCase();
-
-        if (cat.includes('endpoint')) updated.endpoints += 1;
-        if (content.severity === 'CRITICAL' || content.severity === 'HIGH' || cat.includes('vuln')) {
-          updated.vulnerabilities += 1;
-        }
-        if (cat.includes('ux') || cat.includes('experience') || cat.includes('usability')) {
-          updated.uxFailures += 1;
-        }
-        if (cat.includes('business') || cat.includes('gap') || cat.includes('revenue')) {
-          updated.businessGaps += 1;
-        }
-
-        return updated;
-      });
+    if (type === 'finding') {
+      setAgentData(prev => ({
+        ...prev,
+        findings: [...prev.findings, content]
+      }))
+      setMetrics(prev => ({
+        ...prev,
+        vulnerabilities: agent === 'sentinel' ? prev.vulnerabilities + 1 : prev.vulnerabilities,
+        uxFailures: agent === 'stranger' ? prev.uxFailures + 1 : prev.uxFailures,
+        businessGaps: agent === 'oracle' ? prev.businessGaps + 1 : prev.businessGaps
+      }))
     }
 
     if (type === 'metric') {
-      setMetrics((prev) => {
-        const updated = { ...prev };
-        const cat = (content.category || '').toLowerCase();
-
-        if (cat.includes('endpoint')) updated.endpoints = content.value;
-        else if (cat.includes('vuln')) updated.vulnerabilities = content.value;
-        else if (cat.includes('breaking') || cat.includes('load')) updated.breakingPoint = content.value;
-        else if (cat.includes('ux') || cat.includes('experience')) updated.uxFailures = content.value;
-        else if (cat.includes('business') || cat.includes('gap')) updated.businessGaps = content.value;
-
-        return updated;
-      });
+      setMetrics(prev => ({
+        ...prev,
+        [content.category]: content.value
+      }))
     }
 
     if (type === 'judgment') {
-      if (setter) {
-        setter((prev) => ({ ...prev, status: 'complete' }));
-      }
-      setVerdict(content);
-      setScreen('verdict');
+      setVerdict(content)
+      setScreen('verdict')
     }
-  }, [getAgentSetter]);
+  }, [])
 
-  const disconnectAll = useCallback(() => {
-    Object.keys(socketsRef.current).forEach((agentName) => {
-      const socket = socketsRef.current[agentName];
-      if (socket) {
-        socket.disconnect();
+  const sendUrl = useCallback((url) => {
+    setScreen('dashboard')
+    
+    // Reset state
+    setSentinelData({...initialAgentState, status: 'analyzing'})
+    setStrangerData({...initialAgentState, status: 'analyzing'})
+    setOracleData({...initialAgentState, status: 'analyzing'})
+    setMetrics({ endpoints: 0, vulnerabilities: 0, breakingPoint: null, uxFailures: 0, businessGaps: 0 })
+    setVerdict(null)
+
+    let connectedCount = 0
+    const agents = ['sentinel', 'stranger', 'oracle']
+
+    agents.forEach(agent => {
+      const ws = new WebSocket(WS_URLS[agent])
+      wsRefs.current[agent] = ws
+
+      ws.onopen = () => {
+        connectedCount++
+        setConnectionStatus('connected')
+        if (connectedCount === 3) {
+          fetch('http://localhost:8000/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          })
+        }
       }
-    });
-    socketsRef.current = {};
 
-    if (testCleanupRef.current) {
-      testCleanupRef.current();
-      testCleanupRef.current = null;
-    }
-  }, []);
+      ws.onmessage = (event) => handleMessage(agent, event)
+
+      ws.onerror = () => {
+        setConnectionStatus('error')
+      }
+
+      ws.onclose = () => {
+        connectedCount = Math.max(0, connectedCount - 1)
+      }
+    })
+  }, [handleMessage])
+
+  const resetAll = useCallback(() => {
+    Object.values(wsRefs.current).forEach(ws => ws?.close())
+    wsRefs.current = {}
+    setScreen('landing')
+    setSentinelData({...initialAgentState})
+    setStrangerData({...initialAgentState})
+    setOracleData({...initialAgentState})
+    setMetrics({ endpoints: 0, vulnerabilities: 0, breakingPoint: null, uxFailures: 0, businessGaps: 0 })
+    setVerdict(null)
+    setConnectionStatus('disconnected')
+  }, [])
 
   useEffect(() => {
     return () => {
-      disconnectAll();
-    };
-  }, [disconnectAll]);
-
-  const resetAll = useCallback(() => {
-    disconnectAll();
-
-    setScreen('landing');
-    setSentinelData(initialAgentData());
-    setStrangerData(initialAgentData());
-    setOracleData(initialAgentData());
-    setMetrics(initialMetrics());
-    setVerdict(null);
-    setTargetUrl('');
-    setBackendConnectivity(null);
-    setOfflineStatus(null);
-  }, [disconnectAll]);
-
-  const startTestMode = useCallback((fallbackUrl = 'https://demo-startup.com') => {
-    disconnectAll();
-
-    setTargetUrl(fallbackUrl);
-    setScreen('dashboard');
-    setBackendConnectivity('error'); // demo mode active
-    setSentinelData({ ...initialAgentData(), status: 'analyzing' });
-    setStrangerData({ ...initialAgentData(), status: 'analyzing' });
-    setOracleData({ ...initialAgentData(), status: 'analyzing' });
-    setMetrics(initialMetrics());
-    setVerdict(null);
-
-    testCleanupRef.current = runTestSimulation(handleMessage);
-  }, [handleMessage, disconnectAll]);
-
-  const sendUrl = useCallback(async (url) => {
-    setTargetUrl(url);
-    setScreen('dashboard');
-
-    setSentinelData({ ...initialAgentData(), status: 'analyzing' });
-    setStrangerData({ ...initialAgentData(), status: 'analyzing' });
-    setOracleData({ ...initialAgentData(), status: 'analyzing' });
-    setMetrics(initialMetrics());
-    setVerdict(null);
-
-    // Disconnect any existing connections
-    disconnectAll();
-
-    // Connect to all 3 agent WebSockets simultaneously
-    setOfflineStatus('connecting');
-    setBackendConnectivity('connecting');
-    let connectedCount = 0;
-    let failedCount = 0;
-
-    const connectToAgent = (agentName, endpoint) => {
-      return new Promise((resolve, reject) => {
-        const socket = new WebSocket(endpoint);
-        socketsRef.current[agentName] = socket;
-
-        socket.onopen = () => {
-          console.log(`[DELPHI] ${agentName.toUpperCase()} WebSocket connected`);
-          connectedCount++;
-          if (connectedCount === 3) {
-            setOfflineStatus('connected');
-            setBackendConnectivity('connected');
-            // Trigger the analysis via API once all sockets are connected
-            fetch('http://localhost:8000/api/analyze', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ url })
-            }).catch(err => console.error("API Trigger failed:", err));
-          }
-          resolve();
-        };
-
-        socket.onmessage = (event) => {
-          try {
-            const parsed = JSON.parse(event.data);
-            handleMessage(parsed);
-          } catch (err) {
-            console.error(`[DELPHI] ${agentName.toUpperCase()} failed to parse message:`, err);
-          }
-        };
-
-        socket.onerror = (err) => {
-          console.warn(`[DELPHI] ${agentName.toUpperCase()} connection error`);
-          failedCount++;
-          if (failedCount === 1) {
-            setOfflineStatus('error');
-            setBackendConnectivity('error');
-            setShowOfflineToast(true);
-            setTimeout(() => {
-              setShowOfflineToast(false);
-            }, 4000);
-
-            // Automatically switch to demo mode after brief delay if connection fails
-            setTimeout(() => {
-              startTestMode(url);
-            }, 500);
-          }
-          reject();
-        };
-
-        socket.onclose = (reason) => {
-          console.log(`[DELPHI] ${agentName.toUpperCase()} disconnected:`, reason);
-        };
-
-        // For plain native WebSockets, we don't have disconnect(), we use close()
-        socket.disconnect = () => socket.close();
-      });
-    };
-
-    Object.entries(AGENT_ENDPOINTS).forEach(([agentName, endpoint]) => {
-      connectToAgent(agentName, endpoint).catch(() => { });
-    });
-  }, [handleMessage, disconnectAll, startTestMode]);
+      Object.values(wsRefs.current).forEach(ws => ws?.close())
+    }
+  }, [])
 
   return {
     screen,
     sendUrl,
     resetAll,
-    startTestMode,
     sentinelData,
     strangerData,
     oracleData,
     metrics,
     verdict,
-    targetUrl,
-    offlineStatus,
-    showOfflineToast,
-    backendConnectivity,
-  };
+    connectionStatus
+  }
 }

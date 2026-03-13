@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-export default function ReasoningStream({ reasoning = [], color = '#ef4444' }) {
+export default function ReasoningStream({ reasoning = '', color = '#ef4444' }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ export default function ReasoningStream({ reasoning = [], color = '#ef4444' }) {
     }
   }, [reasoning]);
 
-  const displayText = reasoning.join('\n');
+  const displayText = Array.isArray(reasoning) ? reasoning.join('\n') : (reasoning || '');
 
   return (
     <div
