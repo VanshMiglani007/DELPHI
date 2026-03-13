@@ -8,7 +8,6 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from core.crawler import DelphiCrawler
 from core.ollama_client import stream_reasoning, get_completion
 from core.prompts import generate_verdict, generate_fixes
 from core.scorer import calculate_agent_score, calculate_delphi_score
@@ -51,13 +50,6 @@ manager = ConnectionManager()
 
 class AnalyzePayload(BaseModel):
     url: str
-
-@app.on_event("startup")
-async def startup_event():
-    # To prevent immediate failure if playwright isn't installed yet,
-    # avoid full initialization here. The crawler will auto-initialize 
-    # when get_page() is called for the first time.
-    pass
 
 @app.on_event("shutdown")
 async def shutdown_event():
