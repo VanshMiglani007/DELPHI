@@ -32,7 +32,7 @@ async def listen_agent(agent_name, url):
         print(f"[TEST CLIENT] Error in {agent_name}: {e}")
 
 async def main():
-    target_url = "http://example.com"
+    target_url = "http://zepto.com"
     agents = ["sentinel", "stranger", "oracle"]
     
     print(f"--- Starting parallel agent testing on {target_url} ---")
