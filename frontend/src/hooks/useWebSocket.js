@@ -28,6 +28,9 @@ export default function useWebSocket() {
   const [strangerData, setStrangerData] = useState(initialAgentData());
   const [oracleData, setOracleData] = useState(initialAgentData());
   const [metrics, setMetrics] = useState(initialMetrics());
+  const [offlineStatus, setOfflineStatus] = useState(null); // 'connecting', 'connected', 'error', 'disconnected'
+  const [showOfflineToast, setShowOfflineToast] = useState(false);
+  const [backendConnectivity, setBackendConnectivity] = useState(null); // To track overall demo mode state
   const [verdict, setVerdict] = useState(null);
   const [targetUrl, setTargetUrl] = useState('');
   const socketsRef = useRef({});
@@ -125,6 +128,35 @@ export default function useWebSocket() {
     };
   }, [disconnectAll]);
 
+  const resetAll = useCallback(() => {
+    disconnectAll();
+
+    setScreen('landing');
+    setSentinelData(initialAgentData());
+    setStrangerData(initialAgentData());
+    setOracleData(initialAgentData());
+    setMetrics(initialMetrics());
+    setVerdict(null);
+    setTargetUrl('');
+    setBackendConnectivity(null);
+    setOfflineStatus(null);
+  }, [disconnectAll]);
+
+  const startTestMode = useCallback((fallbackUrl = 'https://demo-startup.com') => {
+    disconnectAll();
+
+    setTargetUrl(fallbackUrl);
+    setScreen('dashboard');
+    setBackendConnectivity('error'); // demo mode active
+    setSentinelData({ ...initialAgentData(), status: 'analyzing' });
+    setStrangerData({ ...initialAgentData(), status: 'analyzing' });
+    setOracleData({ ...initialAgentData(), status: 'analyzing' });
+    setMetrics(initialMetrics());
+    setVerdict(null);
+
+    testCleanupRef.current = runTestSimulation(handleMessage);
+  }, [handleMessage, disconnectAll]);
+
   const sendUrl = useCallback((url) => {
     setTargetUrl(url);
     setScreen('dashboard');
@@ -139,6 +171,10 @@ export default function useWebSocket() {
     disconnectAll();
 
     // Connect to all 3 agent WebSockets simultaneously
+    setOfflineStatus('connecting');
+    setBackendConnectivity('connecting');
+    let connectedCount = 0;
+    let failedCount = 0;
     Object.entries(AGENT_ENDPOINTS).forEach(([agentName, endpoint]) => {
       try {
         const socket = io(endpoint, {
@@ -152,6 +188,11 @@ export default function useWebSocket() {
 
         socket.on('connect', () => {
           console.log(`[DELPHI] ${agentName.toUpperCase()} WebSocket connected`);
+          connectedCount++;
+          if (connectedCount === 3) {
+            setOfflineStatus('connected');
+            setBackendConnectivity('connected');
+          }
           socket.emit('message', { url });
         });
 
@@ -166,6 +207,21 @@ export default function useWebSocket() {
 
         socket.on('connect_error', (err) => {
           console.warn(`[DELPHI] ${agentName.toUpperCase()} connection error:`, err.message);
+          failedCount++;
+          // If any WebSocket fails, mark overall as error and trigger test mode
+          if (failedCount === 1) { 
+            setOfflineStatus('error');
+            setBackendConnectivity('error');
+            setShowOfflineToast(true);
+            setTimeout(() => {
+              setShowOfflineToast(false);
+            }, 4000);
+            
+            // Automatically switch to demo mode after brief delay if connection fails
+            setTimeout(() => {
+              startTestMode(url);
+            }, 500);
+          }
         });
 
         socket.on('disconnect', (reason) => {
@@ -175,33 +231,7 @@ export default function useWebSocket() {
         console.error(`[DELPHI] ${agentName.toUpperCase()} socket initialization error:`, err);
       }
     });
-  }, [handleMessage, disconnectAll]);
-
-  const resetAll = useCallback(() => {
-    disconnectAll();
-
-    setScreen('landing');
-    setSentinelData(initialAgentData());
-    setStrangerData(initialAgentData());
-    setOracleData(initialAgentData());
-    setMetrics(initialMetrics());
-    setVerdict(null);
-    setTargetUrl('');
-  }, [disconnectAll]);
-
-  const startTestMode = useCallback(() => {
-    disconnectAll();
-
-    setTargetUrl('https://demo-startup.com');
-    setScreen('dashboard');
-    setSentinelData({ ...initialAgentData(), status: 'analyzing' });
-    setStrangerData({ ...initialAgentData(), status: 'analyzing' });
-    setOracleData({ ...initialAgentData(), status: 'analyzing' });
-    setMetrics(initialMetrics());
-    setVerdict(null);
-
-    testCleanupRef.current = runTestSimulation(handleMessage);
-  }, [handleMessage, disconnectAll]);
+  }, [handleMessage, disconnectAll, startTestMode]);
 
   return {
     screen,
@@ -214,5 +244,8 @@ export default function useWebSocket() {
     metrics,
     verdict,
     targetUrl,
+    offlineStatus,
+    showOfflineToast,
+    backendConnectivity,
   };
 }

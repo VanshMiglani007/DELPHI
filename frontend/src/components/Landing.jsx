@@ -90,7 +90,7 @@ function AgentCard({ agent }) {
   );
 }
 
-export default function Landing({ onSendUrl, onTestMode }) {
+export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) {
   const [url, setUrl] = useState('');
 
   const handleSubmit = (e) => {
@@ -210,7 +210,7 @@ export default function Landing({ onSendUrl, onTestMode }) {
               width: '100%',
               padding: '16px 20px',
               background: '#13131a',
-              border: '1px solid #2a2a3a',
+              border: backendConnectivity === 'error' ? '1px solid #f97316' : '1px solid #2a2a3a',
               borderRadius: '8px',
               color: '#f8fafc',
               fontSize: '15px',
@@ -219,14 +219,15 @@ export default function Landing({ onSendUrl, onTestMode }) {
               transition: 'border 0.2s ease, box-shadow 0.2s ease',
             }}
             onFocus={(e) => {
-              e.target.style.borderColor = '#ffffff';
-              e.target.style.boxShadow = '0 0 20px rgba(255,255,255,0.08)';
+              e.target.style.borderColor = backendConnectivity === 'error' ? '#f97316' : '#ffffff';
+              e.target.style.boxShadow = backendConnectivity === 'error' ? '0 0 20px rgba(249,115,22,0.15)' : '0 0 20px rgba(255,255,255,0.08)';
             }}
             onBlur={(e) => {
-              e.target.style.borderColor = '#2a2a3a';
+              e.target.style.borderColor = backendConnectivity === 'error' ? 'rgba(249,115,22,0.5)' : '#2a2a3a';
               e.target.style.boxShadow = 'none';
             }}
           />
+
           <button
             type="submit"
             disabled={!url.trim()}
@@ -259,8 +260,26 @@ export default function Landing({ onSendUrl, onTestMode }) {
               }
             }}
           >
-            CONSULT THE ORACLE
+            {backendConnectivity === 'error' ? 'CONSULT THE ORACLE (DEMO MODE)' : 'CONSULT THE ORACLE'}
           </button>
+          
+          {backendConnectivity === 'error' && (
+            <div style={{
+              width: '100%',
+              textAlign: 'center',
+              marginTop: '12px',
+              fontSize: '12px',
+              color: '#f97316',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}>
+              <span style={{ fontSize: '14px' }}>⚡</span> Live backend offline — demo mode active
+            </div>
+          )}
+
           <button
             type="button"
             onClick={onTestMode}

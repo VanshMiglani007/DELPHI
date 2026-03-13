@@ -23,7 +23,7 @@ function LiveClock() {
   );
 }
 
-export default function Dashboard({ sentinelData, strangerData, oracleData, metrics, url }) {
+export default function Dashboard({ sentinelData, strangerData, oracleData, metrics, url, backendConnectivity }) {
   const [logoHovered, setLogoHovered] = useState(false);
 
   const agentConfigs = [
@@ -84,16 +84,17 @@ export default function Dashboard({ sentinelData, strangerData, oracleData, metr
                   width: '6px',
                   height: '6px',
                   borderRadius: '50%',
-                  background: '#ef4444',
+                  background: backendConnectivity === 'error' ? '#ef4444' : backendConnectivity === 'connecting' ? '#f97316' : '#22c55e',
+                  boxShadow: backendConnectivity === 'error' ? '0 0 10px #ef4444' : backendConnectivity === 'connecting' ? '0 0 10px #f97316' : '0 0 10px #22c55e',
                 }}
               />
               <span style={{
                 fontSize: '10px',
                 fontWeight: 700,
-                color: '#ef4444',
+                color: backendConnectivity === 'error' ? '#ef4444' : backendConnectivity === 'connecting' ? '#f97316' : '#22c55e',
                 letterSpacing: '0.1em',
               }}>
-                LIVE
+                LIVE {backendConnectivity === 'error' && '(DEMO)'}
               </span>
             </div>
           )}
