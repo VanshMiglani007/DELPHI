@@ -51,7 +51,7 @@ async def main():
         print(f"[TEST CLIENT] Failed to trigger API: {e}")
         
     # Let the analysis run
-    await asyncio.sleep(15)
+    await asyncio.sleep(30)
     
     print("--- Test Complete ---")
     for task in tasks:

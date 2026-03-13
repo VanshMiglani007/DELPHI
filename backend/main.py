@@ -9,8 +9,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from core.crawler import DelphiCrawler
-from core.scorer import calculate_delphi_score
+from core.ollama_client import stream_reasoning, get_completion
 from core.prompts import generate_verdict, generate_fixes
+from core.scorer import calculate_agent_score, calculate_delphi_score
 from agents.sentinel import run_sentinel
 from agents.stranger import run_stranger
 from agents.oracle import run_oracle
@@ -92,16 +93,41 @@ async def run_all_agents(url: str, ws_sentinel, ws_stranger, ws_oracle):
     t2 = asyncio.create_task(run_stranger(url, ws_stranger))
     t3 = asyncio.create_task(run_oracle(url, ws_oracle))
 
-    await asyncio.gather(t1, t2, t3, return_exceptions=True)
-    
     # Collect results from agents
-    # For now, we simulate scores based on task completion
-    sentinel_score = 85
-    stranger_score = 70
-    oracle_score = 92
-
-    # Generate the text summary
-    summary_text = generate_verdict(sentinel_score, stranger_score, oracle_score, [])
+    results = await asyncio.gather(t1, t2, t3, return_exceptions=True)
+    
+    # Extract findings from results
+    sentinel_findings = results[0] if not isinstance(results[0], Exception) else []
+    stranger_findings = results[1] if not isinstance(results[1], Exception) else []
+    oracle_findings = results[2] if not isinstance(results[2], Exception) else []
+    
+    # Calculate scores
+    sentinel_score = calculate_agent_score(sentinel_findings)
+    stranger_score = calculate_agent_score(stranger_findings)
+    oracle_score = calculate_agent_score(oracle_findings)
+    
+    all_findings = sentinel_findings + stranger_findings + oracle_findings
+    top_finding_texts = [f['text'] for f in all_findings if f.get('severity') in ['CRITICAL', 'HIGH']]
+    
+    # Generate the text summary via LLM
+    verdict_prompt = generate_verdict(sentinel_score, stranger_score, oracle_score, top_finding_texts)
+    summary_text = await get_completion(verdict_prompt)
+    
+    # Generate fixes via LLM
+    fixes_prompt = generate_fixes(all_findings)
+    fixes_json_str = await get_completion(fixes_prompt)
+    
+    try:
+        # Clean up possible markdown or whitespace
+        clean_json = fixes_json_str.strip()
+        if "```" in clean_json:
+            clean_json = clean_json.split("```")[1]
+            if clean_json.startswith("json"):
+                clean_json = clean_json[4:]
+        fixes = json.loads(clean_json)
+    except Exception as e:
+        print(f"Failed to parse fixes JSON: {e}")
+        fixes = [] # Fallback
     
     final_message = {
         "agent": "system",
@@ -115,7 +141,7 @@ async def run_all_agents(url: str, ws_sentinel, ws_stranger, ws_oracle):
                 "stranger": stranger_score,
                 "oracle": oracle_score
             },
-            "fixes": generate_fixes([]) # Empty list as fallback
+            "fixes": fixes
         }
     }
     

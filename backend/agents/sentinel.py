@@ -38,6 +38,12 @@ def get_page_content(url):
     return response, soup
 
 async def run_sentinel(url, websocket):
+    all_findings = []
+    
+    async def log_finding(text, severity, category, val=0):
+        all_findings.append({"text": text, "severity": severity, "category": category})
+        await send_message(websocket, "finding", text, severity, category, val)
+
     await send_message(websocket, "reasoning", f"Starting Sentinel analysis for {url}", "INFO", "init")
     await asyncio.sleep(0.5)
 
@@ -97,12 +103,12 @@ async def run_sentinel(url, websocket):
         for header, risk in security_headers.items():
             if header not in resp.headers and header.lower() not in resp.headers:
                 missing_headers.append(header)
-                await send_message(websocket, "finding", f"Missing {header}: {risk}", "HIGH", "headers", 0)
+                await log_finding(f"Missing {header}: {risk}", "HIGH", "headers")
         
         prompt = sentinel_header_reasoning(missing_headers)
         await stream_reasoning(prompt, websocket, "sentinel")
     except Exception as e:
-         await send_message(websocket, "finding", f"Failed to read headers: {e}", "CRITICAL", "headers", 0)
+         await log_finding(f"Failed to read headers: {e}", "CRITICAL", "headers")
 
     # 3. Load testing
     await send_message(websocket, "reasoning", "Initiating progressive load test (10->500 users)...", "INFO", "load")
@@ -130,14 +136,14 @@ async def run_sentinel(url, websocket):
                 await send_message(websocket, "metric", f"System collapsed at {users} users", "CRITICAL", "breakingPoint", users)
                 prompt = sentinel_load_reasoning(breaking_point, error_rate * 100)
                 await stream_reasoning(prompt, websocket, "sentinel")
-                await send_message(websocket, "finding", f"Collapses at {users} concurrent users (Error rate: {error_rate*100:.1f}%)", "CRITICAL", "load", users)
+                await log_finding(f"Collapses at {users} concurrent users (Error rate: {error_rate*100:.1f}%)", "CRITICAL", "load", users)
                 break
             await asyncio.sleep(0.5)
 
     if not breaking_point:
          prompt = sentinel_load_reasoning(500, 0)
          await stream_reasoning(prompt, websocket, "sentinel")
-         await send_message(websocket, "finding", "Survived 500 concurrent users with <20% error rate", "LOW", "load", 500)
+         await log_finding("Survived 500 concurrent users with <20% error rate", "LOW", "load", 500)
 
     # 4. Input fuzzing
     await send_message(websocket, "reasoning", "Fuzzing discovered inputs with SQLi, XSS, and Path Traversal payloads...", "INFO", "fuzzing")
@@ -174,25 +180,25 @@ async def run_sentinel(url, websocket):
                         if attack_type == "SQLi" and any(err in resp_text for err in ["sql syntax", "database error", "mysql_fetch"]):
                             prompt = sentinel_fuzz_reasoning("SQL Injection", action)
                             await stream_reasoning(prompt, websocket, "sentinel")
-                            await send_message(websocket, "finding", f"SQL Injection vulnerability confirmed on form action: {action}", "CRITICAL", "fuzzing", 0)
+                            await log_finding(f"SQL Injection vulnerability confirmed on form action: {action}", "CRITICAL", "fuzzing")
                             break
                         elif attack_type == "XSS" and payload.lower() in resp_text:
                             prompt = sentinel_fuzz_reasoning("Reflected XSS", action)
                             await stream_reasoning(prompt, websocket, "sentinel")
-                            await send_message(websocket, "finding", f"Reflected XSS vulnerability confirmed on form action: {action}", "HIGH", "fuzzing", 0)
+                            await log_finding(f"Reflected XSS vulnerability confirmed on form action: {action}", "HIGH", "fuzzing")
                             break
                         elif attack_type == "Path Traversal" and "root:x:0:0" in resp_text:
                             prompt = sentinel_fuzz_reasoning("Path Traversal", action)
                             await stream_reasoning(prompt, websocket, "sentinel")
-                            await send_message(websocket, "finding", f"Path Traversal vulnerability confirmed on form action: {action}", "CRITICAL", "fuzzing", 0)
+                            await log_finding(f"Path Traversal vulnerability confirmed on form action: {action}", "CRITICAL", "fuzzing")
                             break
                         elif fuzz_resp.status_code >= 500:
-                            await send_message(websocket, "finding", f"Unhandled server exception (500) parsing {attack_type} payload on {action}", "MEDIUM", "fuzzing", 0)
+                            await log_finding(f"Unhandled server exception (500) parsing {attack_type} payload on {action}", "MEDIUM", "fuzzing")
                             break
                     except Exception:
                         pass
     else:
-        await send_message(websocket, "finding", "No forms discovered for fuzzing", "LOW", "fuzzing", 0)
+        await log_finding("No forms discovered for fuzzing", "LOW", "fuzzing")
 
     # 5. SSL
     await send_message(websocket, "reasoning", "Verifying SSL and certificates...", "INFO", "ssl")
@@ -207,11 +213,11 @@ async def run_sentinel(url, websocket):
             
             cert = await loop.run_in_executor(None, get_ssl_expiry)
             not_after = cert.get('notAfter')
-            await send_message(websocket, "finding", f"SSL is valid and active. Certificate expiry: {not_after}", "LOW", "ssl", 1)
+            await log_finding(f"SSL is valid and active. Certificate expiry: {not_after}", "LOW", "ssl", 1)
         except Exception as e:
-            await send_message(websocket, "finding", f"SSL Certificate issue: {e}", "HIGH", "ssl", 0)
+            await log_finding(f"SSL Certificate issue: {e}", "HIGH", "ssl")
     else:
-        await send_message(websocket, "finding", "Target is not using HTTPS (No SSL)", "HIGH", "ssl", 0)
+        await log_finding("Target is not using HTTPS (No SSL)", "HIGH", "ssl")
 
     await send_message(websocket, "status", "Technical analysis complete.", "INFO", "status", 0)
-    return {"status": "done"}
+    return all_findings

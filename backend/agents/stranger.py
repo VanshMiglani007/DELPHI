@@ -30,6 +30,12 @@ def get_page_content(url, mobile=False):
     return response, soup
 
 async def run_stranger(url, websocket):
+    all_findings = []
+    
+    async def log_finding(text, severity, category, val=0):
+        all_findings.append({"text": text, "severity": severity, "category": category})
+        await send_message(websocket, "finding", text, severity, category, val)
+
     await send_message(websocket, "reasoning", "Loading page as a first-time user...", "INFO", "init")
     try:
         import asyncio
@@ -55,9 +61,9 @@ async def run_stranger(url, websocket):
                 break
         
         if cta_visible:
-            await send_message(websocket, "finding", "Primary CTA clearly visible above the fold", "LOW", "cta", 1)
+            await log_finding("Primary CTA clearly visible above the fold", "LOW", "cta", 1)
         else:
-            await send_message(websocket, "finding", "CTA NOT VISIBLE above the fold — Users will leave before interacting", "CRITICAL", "cta", 0)
+            await log_finding("CTA NOT VISIBLE above the fold — Users will leave before interacting", "CRITICAL", "cta", 0)
         
         # 3. Signup flow friction analysis
         await send_message(websocket, "reasoning", "Analyzing signup/onboarding friction...", "INFO", "signup")
@@ -68,9 +74,9 @@ async def run_stranger(url, websocket):
         fields_count = len(valid_fields)
         
         if fields_count > 5:
-            await send_message(websocket, "finding", f"FRICTION TOO HIGH: Signup/Onboarding form has {fields_count} fields. Users will abandon.", "HIGH", "signup", fields_count)
+            await log_finding(f"FRICTION TOO HIGH: Signup/Onboarding form has {fields_count} fields. Users will abandon.", "HIGH", "signup", fields_count)
         elif fields_count > 0:
-            await send_message(websocket, "finding", f"Signup friction acceptable: {fields_count} fields detected.", "LOW", "signup", fields_count)
+            await log_finding(f"Signup friction acceptable: {fields_count} fields detected.", "LOW", "signup", fields_count)
 
         # 4. Trust signal detection
         await send_message(websocket, "reasoning", "Scanning content for trust signals (Testimonials, Pricing, Privacy, Contact, Security)...", "INFO", "trust")
@@ -95,9 +101,9 @@ async def run_stranger(url, websocket):
         missing_trust = [s for s, p in trust_signals.items() if not p]
         if missing_trust:
             for missing in missing_trust:
-                await send_message(websocket, "finding", f"Missing trust signal: {missing}", "MEDIUM", "trust", 0)
+                await log_finding(f"Missing trust signal: {missing}", "MEDIUM", "trust", 0)
         else:
-            await send_message(websocket, "finding", "All key trust signals are present", "LOW", "trust", 1)
+            await log_finding("All key trust signals are present", "LOW", "trust", 1)
 
         # 5. Mobile responsiveness check
         await send_message(websocket, "reasoning", "Simulating mobile viewport (375x812) to verify responsiveness...", "INFO", "mobile")
@@ -118,14 +124,14 @@ async def run_stranger(url, websocket):
             for issue in mobile_issues:
                 prompt = stranger_ux_reasoning(issue)
                 await stream_reasoning(prompt, websocket, "stranger")
-                await send_message(websocket, "finding", f"Mobile issue: {issue}", "HIGH", "mobile", 0)
+                await log_finding(f"Mobile issue: {issue}", "HIGH", "mobile", 0)
         else:
-            await send_message(websocket, "finding", "Mobile layout is stable, text is readable, and buttons are tappable sizes", "LOW", "mobile", 1)
+            await log_finding("Mobile layout is stable, text is readable, and buttons are tappable sizes", "LOW", "mobile", 1)
 
     except Exception as e:
         import traceback
         err_str = traceback.format_exc()
-        await send_message(websocket, "finding", f"Error during UI traversal: {err_str}", "CRITICAL", "error", 0)
+        await log_finding(f"Error during UI traversal: {err_str}", "CRITICAL", "error", 0)
         
     await send_message(websocket, "status", "UX analysis complete.", "INFO", "status", 0)
-    return {"status": "done"}
+    return all_findings

@@ -35,3 +35,16 @@ async def stream_reasoning(prompt: str, websocket, agent: str):
         })
         await websocket.send_text(message)
         await asyncio.sleep(0.05)
+
+async def get_completion(prompt: str):
+    loop = asyncio.get_event_loop()
+
+    def call_groq():
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=500
+        )
+        return response.choices[0].message.content
+
+    return await loop.run_in_executor(None, call_groq)
