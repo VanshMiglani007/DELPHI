@@ -69,8 +69,21 @@ export default function Dashboard({ sentinelData, strangerData, oracleData, metr
             cursor: 'default',
             transition: 'all 0.3s ease',
             textShadow: logoHovered ? '0 0 20px rgba(239,68,68,0.6), 0 0 40px rgba(239,68,68,0.3)' : 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
           }}
         >
+          <img 
+            src="/logo.png" 
+            alt="" 
+            style={{ 
+              height: '28px', 
+              width: '28px',
+              borderRadius: '50%',
+              objectFit: 'contain'
+            }} 
+          />
           DELPHI
         </div>
 

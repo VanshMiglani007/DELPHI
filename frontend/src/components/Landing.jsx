@@ -152,7 +152,6 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity, da
               pointerEvents: 'none',
             }}
           />
-          <img src="/logo.svg" alt="DELPHI" style={{ width: '80px', marginBottom: '16px' }} />
           <h1
             style={{
               fontSize: '96px',
@@ -163,8 +162,23 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity, da
               margin: 0,
               lineHeight: 1,
               position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '24px'
             }}
           >
+            <img 
+              src="/logo.png" 
+              alt="DELPHI" 
+              style={{ 
+                width: '100px', 
+                height: '100px',
+                borderRadius: '50%',
+                objectFit: 'contain',
+                filter: darkMode ? 'drop-shadow(0 0 30px rgba(59,130,246,0.3))' : 'none',
+                backgroundColor: 'transparent'
+              }} 
+            />
             DELPHI
           </h1>
         </motion.div>
