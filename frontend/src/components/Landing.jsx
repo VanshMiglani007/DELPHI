@@ -36,7 +36,7 @@ const agents = [
   },
 ];
 
-function AgentCard({ agent }) {
+function AgentCard({ agent, darkMode }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -45,7 +45,7 @@ function AgentCard({ agent }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         flex: 1,
-        background: '#13131a',
+        background: darkMode ? '#13131a' : '#ffffff',
         borderRadius: '8px',
         padding: '16px',
         display: 'flex',
@@ -70,7 +70,7 @@ function AgentCard({ agent }) {
           fontWeight: 700,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          color: '#f8fafc',
+          color: darkMode ? '#f8fafc' : '#0f172a',
           textAlign: 'center',
         }}
       >
@@ -79,7 +79,7 @@ function AgentCard({ agent }) {
       <span
         style={{
           fontSize: '10px',
-          color: '#94a3b8',
+          color: darkMode ? '#94a3b8' : '#475569',
           textAlign: 'center',
           lineHeight: 1.4,
         }}
@@ -90,7 +90,7 @@ function AgentCard({ agent }) {
   );
 }
 
-export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) {
+export default function Landing({ onSendUrl, onTestMode, backendConnectivity, darkMode }) {
   const [url, setUrl] = useState('');
 
   const handleSubmit = (e) => {
@@ -104,7 +104,7 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
     <div
       style={{
         minHeight: '100vh',
-        background: '#0a0a0f',
+        background: darkMode ? '#0a0a0f' : '#f8fafc',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -112,7 +112,6 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
         overflow: 'hidden',
       }}
     >
-      {/* Animated dot grid background */}
       <div
         className="grid-bg"
         style={{
@@ -138,9 +137,7 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
           zIndex: 1,
         }}
       >
-        {/* Title with breathing glow */}
         <motion.div variants={item} style={{ position: 'relative' }}>
-          {/* Red glow behind title */}
           <div
             className="title-glow-bg"
             style={{
@@ -155,13 +152,14 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
               pointerEvents: 'none',
             }}
           />
+          <img src="/logo.svg" alt="DELPHI" style={{ width: '80px', marginBottom: '16px' }} />
           <h1
             style={{
               fontSize: '96px',
               fontWeight: 900,
               letterSpacing: '0.3em',
-              color: '#ffffff',
-              textShadow: '0 0 60px rgba(255,255,255,0.15)',
+              color: darkMode ? '#ffffff' : '#0f172a',
+              textShadow: darkMode ? '0 0 60px rgba(255,255,255,0.15)' : 'none',
               margin: 0,
               lineHeight: 1,
               position: 'relative',
@@ -171,12 +169,11 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
           </h1>
         </motion.div>
 
-        {/* Tagline */}
         <motion.p
           variants={item}
           style={{
             fontSize: '18px',
-            color: '#94a3b8',
+            color: darkMode ? '#94a3b8' : '#475569',
             letterSpacing: '0.15em',
             marginTop: '16px',
           }}
@@ -184,18 +181,16 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
           Three minds. One truth.
         </motion.p>
 
-        {/* Divider */}
         <motion.div
           variants={item}
           style={{
             width: '60px',
             height: '1px',
-            background: '#333',
+            background: darkMode ? '#333' : '#cbd5e1',
             margin: '32px auto',
           }}
         />
 
-        {/* Form */}
         <motion.form
           variants={item}
           onSubmit={handleSubmit}
@@ -209,21 +204,21 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
             style={{
               width: '100%',
               padding: '16px 20px',
-              background: '#13131a',
-              border: '1px solid #2a2a3a',
+              background: darkMode ? '#13131a' : '#ffffff',
+              border: backendConnectivity === 'error' ? '1px solid #f97316' : darkMode ? '1px solid #2a2a3a' : '1px solid #cbd5e1',
               borderRadius: '8px',
-              color: '#f8fafc',
+              color: darkMode ? '#f8fafc' : '#0f172a',
               fontSize: '15px',
               fontFamily: '"JetBrains Mono", monospace',
               outline: 'none',
               transition: 'border 0.2s ease, box-shadow 0.2s ease',
             }}
             onFocus={(e) => {
-              e.target.style.borderColor = '#ffffff';
-              e.target.style.boxShadow = '0 0 20px rgba(255,255,255,0.08)';
+              e.target.style.borderColor = backendConnectivity === 'error' ? '#f97316' : darkMode ? '#ffffff' : '#0f172a';
+              e.target.style.boxShadow = backendConnectivity === 'error' ? '0 0 20px rgba(249,115,22,0.15)' : '0 0 20px rgba(255,255,255,0.08)';
             }}
             onBlur={(e) => {
-              e.target.style.borderColor = '#2a2a3a';
+              e.target.style.borderColor = backendConnectivity === 'error' ? 'rgba(249,115,22,0.5)' : darkMode ? '#2a2a3a' : '#cbd5e1';
               e.target.style.boxShadow = 'none';
             }}
           />
@@ -235,10 +230,10 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
               width: '100%',
               marginTop: '16px',
               padding: '16px',
-              background: url.trim() ? '#ef4444' : '#2a2a2a',
+              background: url.trim() ? '#ef4444' : darkMode ? '#2a2a2a' : '#e2e8f0',
               border: 'none',
               borderRadius: '8px',
-              color: url.trim() ? '#ffffff' : '#666',
+              color: url.trim() ? '#ffffff' : darkMode ? '#666' : '#94a3b8',
               fontSize: '14px',
               fontWeight: 700,
               textTransform: 'uppercase',
@@ -262,7 +257,23 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
           >
             CONSULT THE ORACLE
           </button>
-          
+
+          {backendConnectivity === 'error' && (
+            <div style={{
+              width: '100%',
+              textAlign: 'center',
+              marginTop: '12px',
+              fontSize: '12px',
+              color: '#f97316',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}>
+              <span style={{ fontSize: '14px' }}>⚡</span> Live backend offline — demo mode active
+            </div>
+          )}
 
           <button
             type="button"
@@ -272,9 +283,9 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
               marginTop: '10px',
               padding: '10px',
               background: 'transparent',
-              border: '1px solid #2a2a3a',
+              border: darkMode ? '1px solid #2a2a3a' : '1px solid #cbd5e1',
               borderRadius: '6px',
-              color: '#555',
+              color: darkMode ? '#555' : '#94a3b8',
               fontSize: '11px',
               fontWeight: 600,
               textTransform: 'uppercase',
@@ -287,15 +298,14 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
               e.target.style.color = '#94a3b8';
             }}
             onMouseLeave={(e) => {
-              e.target.style.borderColor = '#2a2a3a';
-              e.target.style.color = '#555';
+              e.target.style.borderColor = darkMode ? '#2a2a3a' : '#cbd5e1';
+              e.target.style.color = darkMode ? '#555' : '#94a3b8';
             }}
           >
             TEST MODE
           </button>
         </motion.form>
 
-        {/* Agent Preview Cards */}
         <motion.div
           variants={item}
           style={{
@@ -307,19 +317,18 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity }) 
           }}
         >
           {agents.map((agent) => (
-            <AgentCard key={agent.name} agent={agent} />
+            <AgentCard key={agent.name} agent={agent} darkMode={darkMode} />
           ))}
         </motion.div>
       </motion.div>
 
-      {/* Version tag */}
       <div
         style={{
           position: 'fixed',
           bottom: '16px',
           right: '24px',
           fontSize: '10px',
-          color: '#333',
+          color: darkMode ? '#333' : '#94a3b8',
           letterSpacing: '0.1em',
           fontFamily: '"JetBrains Mono", monospace',
           zIndex: 2,
