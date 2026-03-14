@@ -152,6 +152,7 @@ export default function Landing({ onSendUrl, onTestMode, backendConnectivity, da
               pointerEvents: 'none',
             }}
           />
+          <img src="/logo.svg" alt="DELPHI" style={{ width: '80px', marginBottom: '16px' }} />
           <h1
             style={{
               fontSize: '96px',
