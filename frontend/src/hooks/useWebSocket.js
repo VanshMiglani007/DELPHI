@@ -162,7 +162,7 @@ export default function useWebSocket() {
         console.log(`${agent} connection closed`);
       };
     });
-  }, [handleMessage, backendConnectivity, startTestMode]);
+  }, [handleMessage, startTestMode]);
 
   const resetAll = useCallback(() => {
     Object.values(wsRefs.current).forEach(ws => ws?.close());
